@@ -72,13 +72,13 @@ export const flashcards = [
   {
     id: 6,
     category: "street",
-    spanish: "¡Qué padre!",
+    spanish: "¡Qué chingón!",
     english: "How cool!",
     context: "Expressing approval or excitement",
     examples: [
-      { es: "¡Qué padre que viniste!", en: "How cool that you came!" },
-      { es: "Tu coche está bien padre", en: "Your car is really cool" },
-      { es: "¡Qué padre tu viaje!", en: "How cool your trip is!" }
+      { es: "¡Qué chingón que viniste!", en: "How cool that you came!" },
+      { es: "Tu coche está bien chingón", en: "Your car is really cool" },
+      { es: "¡Qué chingón tu viaje!", en: "How cool your trip is!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -162,13 +162,13 @@ export const flashcards = [
   {
     id: 12,
     category: "street",
-    spanish: "¡No manches!",
+    spanish: "¡No mames!",
     english: "No way! / Are you kidding?",
     context: "Polite way to express surprise",
     examples: [
-      { es: "¡No manches! ¿En serio?", en: "No way! Seriously?" },
-      { es: "No manches, qué sorpresa", en: "No way, what a surprise" },
-      { es: "¡No manches, está carísimo!", en: "No way, it's super expensive!" }
+      { es: "¡No mames! ¿En serio?", en: "No way! Seriously?" },
+      { es: "No mames, qué sorpresa", en: "No way, what a surprise" },
+      { es: "¡No mames, está carísimo!", en: "No way, it's super expensive!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -177,13 +177,13 @@ export const flashcards = [
   {
     id: 13,
     category: "street",
-    spanish: "Está gacho",
+    spanish: "Está culero",
     english: "That's bad / ugly",
     context: "Describing something negative",
     examples: [
-      { es: "Está gacho que llegues tarde", en: "It's bad that you arrive late" },
-      { es: "Ese lugar está bien gacho", en: "That place is really bad" },
-      { es: "Qué gacho, se canceló", en: "That's bad, it was cancelled" }
+      { es: "Está culero que llegues tarde", en: "It's bad that you arrive late" },
+      { es: "Ese lugar está bien culero", en: "That place is really bad" },
+      { es: "Qué culero, se canceló", en: "That's bad, it was cancelled" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -221,126 +221,210 @@ export const flashcards = [
   },
   {
     id: 16,
+    category: "street",
     spanish: "Naco",
     english: "Tacky / uncultured",
     context: "Describing something in poor taste",
+    examples: [
+      { es: "Esa ropa está bien naca", en: "Those clothes are really tacky" },
+      { es: "Qué naco ese lugar", en: "That place is so tacky" },
+      { es: "No seas naco, vístete bien", en: "Don't be tacky, dress well" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 17,
-    spanish: "¡Qué madre!",
+    category: "street",
+    spanish: "¡Qué desmadre!",
     english: "What a mess! / Oh my god!",
     context: "Expressing frustration or surprise",
+    examples: [
+      { es: "¡Qué desmadre! Mira cómo quedó todo", en: "What a mess! Look how everything turned out" },
+      { es: "Esa fiesta fue un desmadre total", en: "That party was a total mess" },
+      { es: "¡Qué desmadre con el tráfico!", en: "What a mess with the traffic!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 18,
+    category: "street",
     spanish: "Está padrísimo",
     english: "That's awesome!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está padrísimo tu nuevo coche!", en: "Your new car is awesome!" },
+      { es: "La película estuvo padrísima", en: "The movie was awesome" },
+      { es: "Qué padrísimo está este lugar", en: "This place is so awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 19,
+    category: "street",
     spanish: "Me vale madre",
     english: "I don't care",
     context: "Strong expression of indifference",
+    examples: [
+      { es: "Me vale madre lo que digan", en: "I don't care what they say" },
+      { es: "Eso me vale madre completamente", en: "I don't care about that at all" },
+      { es: "Me vale madre si viene o no", en: "I don't care if he comes or not" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 20,
+    category: "street",
     spanish: "¡Qué show!",
     english: "What a scene! / drama",
     context: "Commenting on a situation",
+    examples: [
+      { es: "¡Qué show armaron en la fiesta!", en: "What a scene they made at the party!" },
+      { es: "Siempre hace un show por todo", en: "He always makes a scene about everything" },
+      { es: "¡Qué show! Mira cómo están discutiendo", en: "What a scene! Look how they're arguing" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 21,
+    category: "street",
     spanish: "Pásele",
     english: "Come in / go ahead",
     context: "Inviting someone to enter or proceed",
+    examples: [
+      { es: "Pásele, está abierto", en: "Come in, it's open" },
+      { es: "Pásele, por favor, siéntese", en: "Come in, please, have a seat" },
+      { es: "Pásele, no se quede en la puerta", en: "Come in, don't stay at the door" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 22,
+    category: "street",
     spanish: "Simón",
     english: "Yes / yeah",
     context: "Casual way to say yes",
+    examples: [
+      { es: "¿Vas a la fiesta? Simón, claro que sí", en: "Are you going to the party? Yeah, of course" },
+      { es: "Simón, está bien", en: "Yeah, that's fine" },
+      { es: "¿Te parece bien? Simón", en: "Does that seem okay? Yeah" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 23,
+    category: "street",
     spanish: "¡No seas mamón!",
     english: "Don't be a jerk!",
     context: "Telling someone not to be annoying",
+    examples: [
+      { es: "¡No seas mamón y ayúdame!", en: "Don't be a jerk and help me!" },
+      { es: "No seas mamón, comparte un poco", en: "Don't be a jerk, share a little" },
+      { es: "¡No seas mamón! No hagas eso", en: "Don't be a jerk! Don't do that" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 24,
+    category: "street",
     spanish: "Está chido",
     english: "That's cool",
     context: "Approving something",
+    examples: [
+      { es: "Tu nueva música está bien chida", en: "Your new music is really cool" },
+      { es: "¡Está chido que vengas!", en: "It's cool that you're coming!" },
+      { es: "Ese lugar está súper chido", en: "That place is super cool" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 25,
+    category: "street",
     spanish: "¡Qué pedo!",
     english: "What's up! / What happened?",
     context: "Very casual greeting or question",
+    examples: [
+      { es: "¡Qué pedo! ¿Cómo estás?", en: "What's up! How are you?" },
+      { es: "¡Qué pedo pasó aquí?", en: "What happened here?" },
+      { es: "Oye, ¿qué pedo con tu trabajo?", en: "Hey, what's up with your job?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 26,
+    category: "street",
     spanish: "¡Está de pelos!",
     english: "That's excellent! / awesome!",
     context: "Saying something is really good",
+    examples: [
+      { es: "¡Está de pelos esta comida!", en: "This food is excellent!" },
+      { es: "Tu coche está de pelos", en: "Your car is awesome" },
+      { es: "¡Qué de pelos está el concierto!", en: "The concert is so excellent!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 27,
+    category: "street",
     spanish: "¡Órale, está chingón!",
     english: "Wow, that's awesome!",
     context: "Combining exclamations for emphasis",
+    examples: [
+      { es: "¡Órale, está chingón tu nuevo trabajo!", en: "Wow, your new job is awesome!" },
+      { es: "Órale, qué chingón está esto", en: "Wow, this is so awesome" },
+      { es: "¡Órale! Está súper chingón", en: "Wow! It's super awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 28,
+    category: "street",
     spanish: "No me digas",
     english: "No way / you don't say",
     context: "Expressing surprise or disbelief",
+    examples: [
+      { es: "¿Ganaste la lotería? ¡No me digas!", en: "You won the lottery? No way!" },
+      { es: "No me digas que es verdad", en: "You don't say it's true" },
+      { es: "¡No me digas! ¿En serio se casó?", en: "No way! Did he really get married?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 29,
+    category: "street",
     spanish: "Está a toda madre",
     english: "That's really great!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está a toda madre tu fiesta!", en: "Your party is really great!" },
+      { es: "Este lugar está a toda madre", en: "This place is really great" },
+      { es: "¡Qué a toda madre está el concierto!", en: "The concert is so great!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
