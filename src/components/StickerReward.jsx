@@ -11,36 +11,23 @@ const dobbyImages = [
   '/images/dobby5.jpeg'
 ];
 
-const encouragementTexts = [
-  "¡Órale, qué chingón!",
-  "¡A huevo!",
-  "¡Eso mera!",
-  "¡Échale ganas!",
-  "¡Rifaste!",
-  "¡Qué chingona eres!",
-  "¡Así se hace!",
-  "¡Eres la mera mera!"
-];
+// Always use "¡A huevo!" for all congratulations
+const encouragementText = "¡A huevo!";
 
 export function StickerReward({ show, streak }) {
   // Use useRef to track the index and cycle through images
   const imageIndexRef = useRef(0);
-  const textIndexRef = useRef(0);
   
   const [currentImage, setCurrentImage] = useState(0);
-  const [currentText, setCurrentText] = useState(0);
   
   useEffect(() => {
     if (show) {
       // Cycle through images instead of random
       imageIndexRef.current = (imageIndexRef.current + 1) % dobbyImages.length;
-      textIndexRef.current = (textIndexRef.current + 1) % encouragementTexts.length;
       
       const newImageIndex = imageIndexRef.current;
-      const newTextIndex = textIndexRef.current;
       
       setCurrentImage(newImageIndex);
-      setCurrentText(newTextIndex);
       
       // Trigger confetti
       confetti({
@@ -82,7 +69,7 @@ export function StickerReward({ show, streak }) {
               e.target.src = dobbyImages[0];
             }}
           />
-          <span className="encouragement-text">{encouragementTexts[currentText]}</span>
+          <span className="encouragement-text">{encouragementText}</span>
           <span className="streak-text">¡{streak} in a row!</span>
         </motion.div>
       )}
