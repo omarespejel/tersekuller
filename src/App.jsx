@@ -29,15 +29,17 @@ function App() {
       setStreak(prev => prev + 1);
       setShowReward(true);
       // Longer display time for mobile
-      setTimeout(() => setShowReward(false), 2500); // was 2000
+      setTimeout(() => setShowReward(false), 2500);
     } else {
       setStreak(0);
       setShowReward(false); // Ensure it's hidden on wrong answer
     }
     
-    // Wait longer before showing next card
+    // Wait longer before showing next card, and ensure it's a different card
     setTimeout(() => {
-      setCurrentCard(getNextCard());
+      // Explicitly exclude the current card to prevent immediate repeats
+      const nextCard = getNextCard(cardId);
+      setCurrentCard(nextCard);
     }, correct ? 2600 : 1500); // Longer wait if correct to see celebration
   };
 

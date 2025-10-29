@@ -73,35 +73,58 @@ export function useSpacedRepetition() {
     });
   }, []);
 
-  const getNextCard = useCallback(() => {
+  const getNextCard = useCallback((excludeCardId = null) => {
     const now = Date.now();
     const DAY_MS = 24 * 60 * 60 * 1000;
     
-    // Cards that are due for review
+    // Minimum time before showing the same card again (1 minute)
+    const MIN_REPEAT_TIME = 60 * 1000;
+    
+    // Cards that are due for review (excluding recently seen cards and current card)
     const dueCards = cards.filter(card => {
+      // Exclude the current card if specified
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
       if (!card.lastSeen) return true; // Never seen = always due
+      
+      // Don't show cards that were just seen (within last minute)
+      if (now - card.lastSeen < MIN_REPEAT_TIME) return false;
       
       const daysSinceLastSeen = (now - card.lastSeen) / DAY_MS;
       return daysSinceLastSeen >= card.interval;
     });
     
     if (dueCards.length > 0) {
-      // Return the most overdue card
-      return dueCards.sort((a, b) => {
-        const aOverdue = a.lastSeen ? 
-          (now - a.lastSeen) / (a.interval * DAY_MS) : Infinity;
-        const bOverdue = b.lastSeen ? 
-          (now - b.lastSeen) / (b.interval * DAY_MS) : Infinity;
-        return bOverdue - aOverdue; // Most overdue first
-      })[0];
+      // Return a random due card instead of always the most overdue
+      // This adds variety while still prioritizing due cards
+      return dueCards[Math.floor(Math.random() * dueCards.length)];
     }
     
-    // No cards due? Show the one due soonest
-    return cards.sort((a, b) => {
-      const aDueDate = (a.lastSeen || 0) + (a.interval * DAY_MS);
-      const bDueDate = (b.lastSeen || 0) + (b.interval * DAY_MS);
-      return aDueDate - bDueDate; // Soonest first
-    })[0];
+    // No cards due? Get cards not seen in last minute (excluding current card)
+    const availableCards = cards.filter(card => {
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
+      if (!card.lastSeen) return true;
+      
+      // Don't show cards seen in the last minute
+      return (now - card.lastSeen) >= MIN_REPEAT_TIME;
+    });
+    
+    if (availableCards.length > 0) {
+      return availableCards[Math.floor(Math.random() * availableCards.length)];
+    }
+    
+    // If all cards were seen recently, return a random one (except current)
+    const remainingCards = excludeCardId 
+      ? cards.filter(c => c.id !== excludeCardId)
+      : cards;
+    
+    if (remainingCards.length > 0) {
+      return remainingCards[Math.floor(Math.random() * remainingCards.length)];
+    }
+    
+    // Fallback: return any card
+    return cards[0];
   }, [cards]);
 
   return { cards, updateCard, getNextCard };
