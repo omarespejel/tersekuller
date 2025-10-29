@@ -1,11 +1,18 @@
 services:
   - type: web
-    name: tersekuller
+    name: tersekuller-buse
     env: static
     buildCommand: bun install && bun run build
     staticPublishPath: ./dist
+    domains:
+      - buse.espejel.cc
     headers:
       - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /static/*
         name: Cache-Control
-        value: public, max-age=3600
-
+        value: public, max-age=31536000
