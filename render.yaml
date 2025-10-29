@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tersekuller
+    env: static
+    buildCommand: bun install && bun run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+

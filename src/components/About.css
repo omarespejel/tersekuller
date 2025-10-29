@@ -1,0 +1,261 @@
+/* src/components/About.css */
+
+.about-btn {
+  background: linear-gradient(135deg, var(--honey-gold), var(--honey-amber));
+  color: var(--bear-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+  margin-top: 20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.about-btn:hover {
+  transform: scale(1.05);
+}
+
+.about-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.about-content {
+  background: linear-gradient(135deg, var(--cream) 0%, var(--pink-soft) 100%);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--bear-dark);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.about-content h2 {
+  color: var(--bear-dark);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.research-section h3,
+.forgetting-curve h3,
+.sm2-algorithm h3,
+.language-learning h3,
+.how-tersekuller-works h3,
+.research-citations h3 {
+  color: var(--bear-brown);
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.research-section p,
+.forgetting-curve p,
+.sm2-algorithm p,
+.language-learning p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+blockquote {
+  background: rgba(255, 255, 255, 0.7);
+  border-left: 4px solid var(--honey-amber);
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+blockquote p {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+blockquote cite {
+  display: block;
+  text-align: right;
+  font-size: 0.9em;
+  color: var(--bear-dark);
+}
+
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, var(--honey-gold) 60%);
+  padding: 2px 4px;
+  font-weight: bold;
+}
+
+.curve-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  padding: 15px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  min-width: 120px;
+}
+
+.stat .time {
+  display: block;
+  font-weight: bold;
+  color: var(--bear-brown);
+  margin-bottom: 5px;
+}
+
+.stat .retention {
+  display: block;
+  font-size: 2em;
+  color: var(--honey-amber);
+  font-weight: bold;
+}
+
+.stat .label {
+  display: block;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.algorithm-steps {
+  margin: 20px 0;
+}
+
+.step {
+  display: flex;
+  align-items: start;
+  margin: 20px 0;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+  background: var(--honey-amber);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.spanish-text {
+  color: var(--bear-brown);
+  font-weight: bold;
+  font-style: italic;
+}
+
+.research-highlights {
+  list-style: none;
+  padding: 0;
+}
+
+.research-highlights li {
+  background: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.research-highlights cite {
+  display: block;
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 5px;
+  font-style: normal;
+}
+
+.citations {
+  list-style: none;
+  padding: 0;
+  font-size: 0.9em;
+}
+
+.citations li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+  line-height: 1.5;
+}
+
+.fun-fact {
+  background: linear-gradient(135deg, var(--pink-soft), var(--lavender));
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 30px;
+}
+
+.fun-fact p {
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .about-content {
+    padding: 20px;
+    max-height: 95vh;
+  }
+
+  .curve-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .step-number {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+}
+
