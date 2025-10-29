@@ -82,7 +82,7 @@ then provide specific, actionable advice for improvement. Focus on:
 │   │   ├── useSound.js
 │   │   └── useSpacedRepetition.js
 │   └── main.jsx
-├── tersekuller-context-2025-10-29_20-28-52_CET.txt
+├── tersekuller-context-2025-10-29_20-46-34_CET.txt
 ├── uv.lock
 └── vite.config.js
 
@@ -1632,57 +1632,96 @@ footer {
     padding: 10px 15px;
   }
   
+  /* Hide progress summary on mobile to save space */
+  .progress-summary {
+    display: none;
+  }
+  
+  /* Smaller header */
+  header {
+    padding: 15px 10px;
+    margin-bottom: 15px;
+  }
+  
+  header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
   .card-container {
     max-width: 100%;
-    height: 500px;
+    height: 650px !important; /* Much taller for examples - was 500px */
     margin: 15px auto;
     padding: 0 5px;
   }
   
   .card-front,
   .card-back {
-    padding: 25px 20px;
+    padding: 20px 15px; /* Reduced padding to give more content space */
     border-radius: 18px;
+    height: 100%;
+    overflow-y: auto; /* Allow scrolling if needed */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   }
   
+  /* Make examples section expandable */
+  .examples-section {
+    margin: 15px 0;
+    max-height: none !important; /* Remove height limit on mobile */
+    flex: 1; /* Take available space */
+  }
+  
+  .examples-list {
+    max-height: 250px; /* Limit examples height but allow scroll */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Smaller text to fit more content */
   .spanish-text {
-    font-size: 2rem !important;
-    margin: 30px 0 !important;
+    font-size: 1.8rem !important; /* Smaller */
+    margin: 20px 0 !important;
   }
   
   .english-text {
-    font-size: 1.5rem !important;
+    font-size: 1.3rem !important; /* Smaller */
+    margin-bottom: 10px !important;
   }
   
   .context-text {
-    font-size: 0.95rem !important;
-  }
-  
-  .examples-section {
-    margin: 15px 0;
+    font-size: 0.9rem !important;
+    margin-bottom: 15px !important;
   }
   
   .example-item {
-    padding: 12px;
+    padding: 10px !important; /* Smaller padding */
   }
   
   .example-spanish {
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 6px !important;
   }
   
   .example-english {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem !important;
+    padding-left: 10px !important;
   }
   
+  /* Ensure answer buttons stay at bottom */
   .answer-buttons {
-    gap: 10px;
-    margin-top: 15px;
+    margin-top: auto; /* Push to bottom */
+    padding-top: 10px;
+    gap: 8px;
   }
   
   .btn-answer {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-    min-height: 44px; /* Better touch target */
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    min-height: 44px;
   }
   
   .flip-btn,
@@ -1692,13 +1731,18 @@ footer {
     min-height: 44px; /* Better touch target */
   }
   
+  /* Smaller dobby images on mobile */
   .dobby-image {
-    width: 150px;
-    height: 150px;
+    width: 120px !important;
+    height: 120px !important;
   }
 
   .encouragement-text {
-    font-size: 1.4rem;
+    font-size: 1.2rem !important;
+  }
+  
+  .streak-text {
+    font-size: 1rem !important;
   }
 
   .achievement-popup {
@@ -1715,10 +1759,6 @@ footer {
     padding: 12px;
   }
   
-  header {
-    padding: 20px 15px;
-  }
-  
   .stats {
     gap: 10px;
   }
@@ -1726,6 +1766,21 @@ footer {
   .stat-item {
     padding: 8px 12px;
     min-width: 70px;
+  }
+}
+
+/* Additional fix for very small phones */
+@media (max-width: 380px) {
+  .card-container {
+    height: 600px !important;
+  }
+  
+  .spanish-text {
+    font-size: 1.5rem !important;
+  }
+  
+  .english-text {
+    font-size: 1.2rem !important;
   }
 }
 
@@ -1877,14 +1932,19 @@ function App() {
     if (correct) {
       setStreak(prev => prev + 1);
       setShowReward(true);
-      setTimeout(() => setShowReward(false), 2000);
+      // Longer display time for mobile
+      setTimeout(() => setShowReward(false), 2500);
     } else {
       setStreak(0);
+      setShowReward(false); // Ensure it's hidden on wrong answer
     }
     
+    // Wait longer before showing next card, and ensure it's a different card
     setTimeout(() => {
-      setCurrentCard(getNextCard());
-    }, 2000);
+      // Explicitly exclude the current card to prevent immediate repeats
+      const nextCard = getNextCard(cardId);
+      setCurrentCard(nextCard);
+    }, correct ? 2600 : 1500); // Longer wait if correct to see celebration
   };
 
   const progress = cards.filter(c => c.difficulty > 0).length;
@@ -3022,11 +3082,11 @@ export function Stats({ cards, streak }) {
 ---
 
 ## FILE: src/components/StickerReward.jsx
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
-// Dobby images - stored in public/images/
+// Dobby images
 const dobbyImages = [
   '/images/dobby1.jpeg',
   '/images/dobby2.jpeg',
@@ -3035,23 +3095,23 @@ const dobbyImages = [
   '/images/dobby5.jpeg'
 ];
 
-const encouragementTexts = [
-  "¡Órale, qué chingón!",
-  "¡A huevo!",
-  "¡Eso mera!",
-  "¡Échale ganas!",
-  "¡Rifaste!"
-];
+// Always use "¡A huevo!" for all congratulations
+const encouragementText = "¡A huevo!";
 
 export function StickerReward({ show, streak }) {
+  // Use useRef to track the index and cycle through images
+  const imageIndexRef = useRef(0);
+  
   const [currentImage, setCurrentImage] = useState(0);
-  const [currentText, setCurrentText] = useState(0);
   
   useEffect(() => {
     if (show) {
-      // Randomize dobby image and text
-      setCurrentImage(Math.floor(Math.random() * dobbyImages.length));
-      setCurrentText(Math.floor(Math.random() * encouragementTexts.length));
+      // Cycle through images instead of random
+      imageIndexRef.current = (imageIndexRef.current + 1) % dobbyImages.length;
+      
+      const newImageIndex = imageIndexRef.current;
+      
+      setCurrentImage(newImageIndex);
       
       // Trigger confetti
       confetti({
@@ -3060,26 +3120,44 @@ export function StickerReward({ show, streak }) {
         origin: { y: 0.6 },
         colors: ['#FFD700', '#FF69B4', '#FFE4E1']
       });
+      
+      // Preload next image to ensure it's ready
+      const nextIndex = (newImageIndex + 1) % dobbyImages.length;
+      const img = new Image();
+      img.src = dobbyImages[nextIndex];
+      
+      // Debug logs
+      console.log('Showing reward with image:', dobbyImages[newImageIndex]);
+      console.log('Image index:', newImageIndex);
     }
   }, [show]);
 
-  if (!show) return null;
-
+  // Always render but control visibility with AnimatePresence
   return (
-    <motion.div
-      initial={{ scale: 0, rotate: -180, opacity: 0 }}
-      animate={{ scale: 1, rotate: 0, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      className="sticker-reward"
-    >
-      <img 
-        src={dobbyImages[currentImage]} 
-        alt="Celebration Dobby" 
-        className="dobby-image"
-      />
-      <span className="encouragement-text">{encouragementTexts[currentText]}</span>
-      <span className="streak-text">¡{streak} in a row!</span>
-    </motion.div>
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          key="sticker-reward"
+          initial={{ scale: 0, rotate: -180, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="sticker-reward"
+        >
+          <img 
+            src={dobbyImages[currentImage]} 
+            alt="Celebration Dobby" 
+            className="dobby-image"
+            onError={(e) => {
+              // Fallback if image fails to load
+              e.target.src = dobbyImages[0];
+            }}
+          />
+          <span className="encouragement-text">{encouragementText}</span>
+          <span className="streak-text">¡{streak} in a row!</span>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -3163,13 +3241,13 @@ export const flashcards = [
   {
     id: 6,
     category: "street",
-    spanish: "¡Qué padre!",
+    spanish: "¡Qué chingón!",
     english: "How cool!",
     context: "Expressing approval or excitement",
     examples: [
-      { es: "¡Qué padre que viniste!", en: "How cool that you came!" },
-      { es: "Tu coche está bien padre", en: "Your car is really cool" },
-      { es: "¡Qué padre tu viaje!", en: "How cool your trip is!" }
+      { es: "¡Qué chingón que viniste!", en: "How cool that you came!" },
+      { es: "Tu coche está bien chingón", en: "Your car is really cool" },
+      { es: "¡Qué chingón tu viaje!", en: "How cool your trip is!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -3253,13 +3331,13 @@ export const flashcards = [
   {
     id: 12,
     category: "street",
-    spanish: "¡No manches!",
+    spanish: "¡No mames!",
     english: "No way! / Are you kidding?",
     context: "Polite way to express surprise",
     examples: [
-      { es: "¡No manches! ¿En serio?", en: "No way! Seriously?" },
-      { es: "No manches, qué sorpresa", en: "No way, what a surprise" },
-      { es: "¡No manches, está carísimo!", en: "No way, it's super expensive!" }
+      { es: "¡No mames! ¿En serio?", en: "No way! Seriously?" },
+      { es: "No mames, qué sorpresa", en: "No way, what a surprise" },
+      { es: "¡No mames, está carísimo!", en: "No way, it's super expensive!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -3268,13 +3346,13 @@ export const flashcards = [
   {
     id: 13,
     category: "street",
-    spanish: "Está gacho",
+    spanish: "Está culero",
     english: "That's bad / ugly",
     context: "Describing something negative",
     examples: [
-      { es: "Está gacho que llegues tarde", en: "It's bad that you arrive late" },
-      { es: "Ese lugar está bien gacho", en: "That place is really bad" },
-      { es: "Qué gacho, se canceló", en: "That's bad, it was cancelled" }
+      { es: "Está culero que llegues tarde", en: "It's bad that you arrive late" },
+      { es: "Ese lugar está bien culero", en: "That place is really bad" },
+      { es: "Qué culero, se canceló", en: "That's bad, it was cancelled" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -3312,126 +3390,210 @@ export const flashcards = [
   },
   {
     id: 16,
+    category: "street",
     spanish: "Naco",
     english: "Tacky / uncultured",
     context: "Describing something in poor taste",
+    examples: [
+      { es: "Esa ropa está bien naca", en: "Those clothes are really tacky" },
+      { es: "Qué naco ese lugar", en: "That place is so tacky" },
+      { es: "No seas naco, vístete bien", en: "Don't be tacky, dress well" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 17,
-    spanish: "¡Qué madre!",
+    category: "street",
+    spanish: "¡Qué desmadre!",
     english: "What a mess! / Oh my god!",
     context: "Expressing frustration or surprise",
+    examples: [
+      { es: "¡Qué desmadre! Mira cómo quedó todo", en: "What a mess! Look how everything turned out" },
+      { es: "Esa fiesta fue un desmadre total", en: "That party was a total mess" },
+      { es: "¡Qué desmadre con el tráfico!", en: "What a mess with the traffic!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 18,
+    category: "street",
     spanish: "Está padrísimo",
     english: "That's awesome!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está padrísimo tu nuevo coche!", en: "Your new car is awesome!" },
+      { es: "La película estuvo padrísima", en: "The movie was awesome" },
+      { es: "Qué padrísimo está este lugar", en: "This place is so awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 19,
+    category: "street",
     spanish: "Me vale madre",
     english: "I don't care",
     context: "Strong expression of indifference",
+    examples: [
+      { es: "Me vale madre lo que digan", en: "I don't care what they say" },
+      { es: "Eso me vale madre completamente", en: "I don't care about that at all" },
+      { es: "Me vale madre si viene o no", en: "I don't care if he comes or not" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 20,
+    category: "street",
     spanish: "¡Qué show!",
     english: "What a scene! / drama",
     context: "Commenting on a situation",
+    examples: [
+      { es: "¡Qué show armaron en la fiesta!", en: "What a scene they made at the party!" },
+      { es: "Siempre hace un show por todo", en: "He always makes a scene about everything" },
+      { es: "¡Qué show! Mira cómo están discutiendo", en: "What a scene! Look how they're arguing" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 21,
+    category: "street",
     spanish: "Pásele",
     english: "Come in / go ahead",
     context: "Inviting someone to enter or proceed",
+    examples: [
+      { es: "Pásele, está abierto", en: "Come in, it's open" },
+      { es: "Pásele, por favor, siéntese", en: "Come in, please, have a seat" },
+      { es: "Pásele, no se quede en la puerta", en: "Come in, don't stay at the door" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 22,
+    category: "street",
     spanish: "Simón",
     english: "Yes / yeah",
     context: "Casual way to say yes",
+    examples: [
+      { es: "¿Vas a la fiesta? Simón, claro que sí", en: "Are you going to the party? Yeah, of course" },
+      { es: "Simón, está bien", en: "Yeah, that's fine" },
+      { es: "¿Te parece bien? Simón", en: "Does that seem okay? Yeah" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 23,
+    category: "street",
     spanish: "¡No seas mamón!",
     english: "Don't be a jerk!",
     context: "Telling someone not to be annoying",
+    examples: [
+      { es: "¡No seas mamón y ayúdame!", en: "Don't be a jerk and help me!" },
+      { es: "No seas mamón, comparte un poco", en: "Don't be a jerk, share a little" },
+      { es: "¡No seas mamón! No hagas eso", en: "Don't be a jerk! Don't do that" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 24,
+    category: "street",
     spanish: "Está chido",
     english: "That's cool",
     context: "Approving something",
+    examples: [
+      { es: "Tu nueva música está bien chida", en: "Your new music is really cool" },
+      { es: "¡Está chido que vengas!", en: "It's cool that you're coming!" },
+      { es: "Ese lugar está súper chido", en: "That place is super cool" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 25,
+    category: "street",
     spanish: "¡Qué pedo!",
     english: "What's up! / What happened?",
     context: "Very casual greeting or question",
+    examples: [
+      { es: "¡Qué pedo! ¿Cómo estás?", en: "What's up! How are you?" },
+      { es: "¡Qué pedo pasó aquí?", en: "What happened here?" },
+      { es: "Oye, ¿qué pedo con tu trabajo?", en: "Hey, what's up with your job?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 26,
+    category: "street",
     spanish: "¡Está de pelos!",
     english: "That's excellent! / awesome!",
     context: "Saying something is really good",
+    examples: [
+      { es: "¡Está de pelos esta comida!", en: "This food is excellent!" },
+      { es: "Tu coche está de pelos", en: "Your car is awesome" },
+      { es: "¡Qué de pelos está el concierto!", en: "The concert is so excellent!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 27,
+    category: "street",
     spanish: "¡Órale, está chingón!",
     english: "Wow, that's awesome!",
     context: "Combining exclamations for emphasis",
+    examples: [
+      { es: "¡Órale, está chingón tu nuevo trabajo!", en: "Wow, your new job is awesome!" },
+      { es: "Órale, qué chingón está esto", en: "Wow, this is so awesome" },
+      { es: "¡Órale! Está súper chingón", en: "Wow! It's super awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 28,
+    category: "street",
     spanish: "No me digas",
     english: "No way / you don't say",
     context: "Expressing surprise or disbelief",
+    examples: [
+      { es: "¿Ganaste la lotería? ¡No me digas!", en: "You won the lottery? No way!" },
+      { es: "No me digas que es verdad", en: "You don't say it's true" },
+      { es: "¡No me digas! ¿En serio se casó?", en: "No way! Did he really get married?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 29,
+    category: "street",
     spanish: "Está a toda madre",
     english: "That's really great!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está a toda madre tu fiesta!", en: "Your party is really great!" },
+      { es: "Este lugar está a toda madre", en: "This place is really great" },
+      { es: "¡Qué a toda madre está el concierto!", en: "The concert is so great!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
@@ -4346,35 +4508,58 @@ export function useSpacedRepetition() {
     });
   }, []);
 
-  const getNextCard = useCallback(() => {
+  const getNextCard = useCallback((excludeCardId = null) => {
     const now = Date.now();
     const DAY_MS = 24 * 60 * 60 * 1000;
     
-    // Cards that are due for review
+    // Minimum time before showing the same card again (1 minute)
+    const MIN_REPEAT_TIME = 60 * 1000;
+    
+    // Cards that are due for review (excluding recently seen cards and current card)
     const dueCards = cards.filter(card => {
+      // Exclude the current card if specified
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
       if (!card.lastSeen) return true; // Never seen = always due
+      
+      // Don't show cards that were just seen (within last minute)
+      if (now - card.lastSeen < MIN_REPEAT_TIME) return false;
       
       const daysSinceLastSeen = (now - card.lastSeen) / DAY_MS;
       return daysSinceLastSeen >= card.interval;
     });
     
     if (dueCards.length > 0) {
-      // Return the most overdue card
-      return dueCards.sort((a, b) => {
-        const aOverdue = a.lastSeen ? 
-          (now - a.lastSeen) / (a.interval * DAY_MS) : Infinity;
-        const bOverdue = b.lastSeen ? 
-          (now - b.lastSeen) / (b.interval * DAY_MS) : Infinity;
-        return bOverdue - aOverdue; // Most overdue first
-      })[0];
+      // Return a random due card instead of always the most overdue
+      // This adds variety while still prioritizing due cards
+      return dueCards[Math.floor(Math.random() * dueCards.length)];
     }
     
-    // No cards due? Show the one due soonest
-    return cards.sort((a, b) => {
-      const aDueDate = (a.lastSeen || 0) + (a.interval * DAY_MS);
-      const bDueDate = (b.lastSeen || 0) + (b.interval * DAY_MS);
-      return aDueDate - bDueDate; // Soonest first
-    })[0];
+    // No cards due? Get cards not seen in last minute (excluding current card)
+    const availableCards = cards.filter(card => {
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
+      if (!card.lastSeen) return true;
+      
+      // Don't show cards seen in the last minute
+      return (now - card.lastSeen) >= MIN_REPEAT_TIME;
+    });
+    
+    if (availableCards.length > 0) {
+      return availableCards[Math.floor(Math.random() * availableCards.length)];
+    }
+    
+    // If all cards were seen recently, return a random one (except current)
+    const remainingCards = excludeCardId 
+      ? cards.filter(c => c.id !== excludeCardId)
+      : cards;
+    
+    if (remainingCards.length > 0) {
+      return remainingCards[Math.floor(Math.random() * remainingCards.length)];
+    }
+    
+    // Fallback: return any card
+    return cards[0];
   }, [cards]);
 
   return { cards, updateCard, getNextCard };
@@ -5187,11 +5372,11 @@ export function Stats({ cards, streak }) {
 ---
 
 ## FILE: src/components/StickerReward.jsx
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
-// Dobby images - stored in public/images/
+// Dobby images
 const dobbyImages = [
   '/images/dobby1.jpeg',
   '/images/dobby2.jpeg',
@@ -5200,23 +5385,23 @@ const dobbyImages = [
   '/images/dobby5.jpeg'
 ];
 
-const encouragementTexts = [
-  "¡Órale, qué chingón!",
-  "¡A huevo!",
-  "¡Eso mera!",
-  "¡Échale ganas!",
-  "¡Rifaste!"
-];
+// Always use "¡A huevo!" for all congratulations
+const encouragementText = "¡A huevo!";
 
 export function StickerReward({ show, streak }) {
+  // Use useRef to track the index and cycle through images
+  const imageIndexRef = useRef(0);
+  
   const [currentImage, setCurrentImage] = useState(0);
-  const [currentText, setCurrentText] = useState(0);
   
   useEffect(() => {
     if (show) {
-      // Randomize dobby image and text
-      setCurrentImage(Math.floor(Math.random() * dobbyImages.length));
-      setCurrentText(Math.floor(Math.random() * encouragementTexts.length));
+      // Cycle through images instead of random
+      imageIndexRef.current = (imageIndexRef.current + 1) % dobbyImages.length;
+      
+      const newImageIndex = imageIndexRef.current;
+      
+      setCurrentImage(newImageIndex);
       
       // Trigger confetti
       confetti({
@@ -5225,26 +5410,44 @@ export function StickerReward({ show, streak }) {
         origin: { y: 0.6 },
         colors: ['#FFD700', '#FF69B4', '#FFE4E1']
       });
+      
+      // Preload next image to ensure it's ready
+      const nextIndex = (newImageIndex + 1) % dobbyImages.length;
+      const img = new Image();
+      img.src = dobbyImages[nextIndex];
+      
+      // Debug logs
+      console.log('Showing reward with image:', dobbyImages[newImageIndex]);
+      console.log('Image index:', newImageIndex);
     }
   }, [show]);
 
-  if (!show) return null;
-
+  // Always render but control visibility with AnimatePresence
   return (
-    <motion.div
-      initial={{ scale: 0, rotate: -180, opacity: 0 }}
-      animate={{ scale: 1, rotate: 0, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      className="sticker-reward"
-    >
-      <img 
-        src={dobbyImages[currentImage]} 
-        alt="Celebration Dobby" 
-        className="dobby-image"
-      />
-      <span className="encouragement-text">{encouragementTexts[currentText]}</span>
-      <span className="streak-text">¡{streak} in a row!</span>
-    </motion.div>
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          key="sticker-reward"
+          initial={{ scale: 0, rotate: -180, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="sticker-reward"
+        >
+          <img 
+            src={dobbyImages[currentImage]} 
+            alt="Celebration Dobby" 
+            className="dobby-image"
+            onError={(e) => {
+              // Fallback if image fails to load
+              e.target.src = dobbyImages[0];
+            }}
+          />
+          <span className="encouragement-text">{encouragementText}</span>
+          <span className="streak-text">¡{streak} in a row!</span>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -5369,35 +5572,58 @@ export function useSpacedRepetition() {
     });
   }, []);
 
-  const getNextCard = useCallback(() => {
+  const getNextCard = useCallback((excludeCardId = null) => {
     const now = Date.now();
     const DAY_MS = 24 * 60 * 60 * 1000;
     
-    // Cards that are due for review
+    // Minimum time before showing the same card again (1 minute)
+    const MIN_REPEAT_TIME = 60 * 1000;
+    
+    // Cards that are due for review (excluding recently seen cards and current card)
     const dueCards = cards.filter(card => {
+      // Exclude the current card if specified
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
       if (!card.lastSeen) return true; // Never seen = always due
+      
+      // Don't show cards that were just seen (within last minute)
+      if (now - card.lastSeen < MIN_REPEAT_TIME) return false;
       
       const daysSinceLastSeen = (now - card.lastSeen) / DAY_MS;
       return daysSinceLastSeen >= card.interval;
     });
     
     if (dueCards.length > 0) {
-      // Return the most overdue card
-      return dueCards.sort((a, b) => {
-        const aOverdue = a.lastSeen ? 
-          (now - a.lastSeen) / (a.interval * DAY_MS) : Infinity;
-        const bOverdue = b.lastSeen ? 
-          (now - b.lastSeen) / (b.interval * DAY_MS) : Infinity;
-        return bOverdue - aOverdue; // Most overdue first
-      })[0];
+      // Return a random due card instead of always the most overdue
+      // This adds variety while still prioritizing due cards
+      return dueCards[Math.floor(Math.random() * dueCards.length)];
     }
     
-    // No cards due? Show the one due soonest
-    return cards.sort((a, b) => {
-      const aDueDate = (a.lastSeen || 0) + (a.interval * DAY_MS);
-      const bDueDate = (b.lastSeen || 0) + (b.interval * DAY_MS);
-      return aDueDate - bDueDate; // Soonest first
-    })[0];
+    // No cards due? Get cards not seen in last minute (excluding current card)
+    const availableCards = cards.filter(card => {
+      if (excludeCardId && card.id === excludeCardId) return false;
+      
+      if (!card.lastSeen) return true;
+      
+      // Don't show cards seen in the last minute
+      return (now - card.lastSeen) >= MIN_REPEAT_TIME;
+    });
+    
+    if (availableCards.length > 0) {
+      return availableCards[Math.floor(Math.random() * availableCards.length)];
+    }
+    
+    // If all cards were seen recently, return a random one (except current)
+    const remainingCards = excludeCardId 
+      ? cards.filter(c => c.id !== excludeCardId)
+      : cards;
+    
+    if (remainingCards.length > 0) {
+      return remainingCards[Math.floor(Math.random() * remainingCards.length)];
+    }
+    
+    // Fallback: return any card
+    return cards[0];
   }, [cards]);
 
   return { cards, updateCard, getNextCard };
@@ -5481,13 +5707,13 @@ export const flashcards = [
   {
     id: 6,
     category: "street",
-    spanish: "¡Qué padre!",
+    spanish: "¡Qué chingón!",
     english: "How cool!",
     context: "Expressing approval or excitement",
     examples: [
-      { es: "¡Qué padre que viniste!", en: "How cool that you came!" },
-      { es: "Tu coche está bien padre", en: "Your car is really cool" },
-      { es: "¡Qué padre tu viaje!", en: "How cool your trip is!" }
+      { es: "¡Qué chingón que viniste!", en: "How cool that you came!" },
+      { es: "Tu coche está bien chingón", en: "Your car is really cool" },
+      { es: "¡Qué chingón tu viaje!", en: "How cool your trip is!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -5571,13 +5797,13 @@ export const flashcards = [
   {
     id: 12,
     category: "street",
-    spanish: "¡No manches!",
+    spanish: "¡No mames!",
     english: "No way! / Are you kidding?",
     context: "Polite way to express surprise",
     examples: [
-      { es: "¡No manches! ¿En serio?", en: "No way! Seriously?" },
-      { es: "No manches, qué sorpresa", en: "No way, what a surprise" },
-      { es: "¡No manches, está carísimo!", en: "No way, it's super expensive!" }
+      { es: "¡No mames! ¿En serio?", en: "No way! Seriously?" },
+      { es: "No mames, qué sorpresa", en: "No way, what a surprise" },
+      { es: "¡No mames, está carísimo!", en: "No way, it's super expensive!" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -5586,13 +5812,13 @@ export const flashcards = [
   {
     id: 13,
     category: "street",
-    spanish: "Está gacho",
+    spanish: "Está culero",
     english: "That's bad / ugly",
     context: "Describing something negative",
     examples: [
-      { es: "Está gacho que llegues tarde", en: "It's bad that you arrive late" },
-      { es: "Ese lugar está bien gacho", en: "That place is really bad" },
-      { es: "Qué gacho, se canceló", en: "That's bad, it was cancelled" }
+      { es: "Está culero que llegues tarde", en: "It's bad that you arrive late" },
+      { es: "Ese lugar está bien culero", en: "That place is really bad" },
+      { es: "Qué culero, se canceló", en: "That's bad, it was cancelled" }
     ],
     difficulty: 0,
     lastSeen: null,
@@ -5630,126 +5856,210 @@ export const flashcards = [
   },
   {
     id: 16,
+    category: "street",
     spanish: "Naco",
     english: "Tacky / uncultured",
     context: "Describing something in poor taste",
+    examples: [
+      { es: "Esa ropa está bien naca", en: "Those clothes are really tacky" },
+      { es: "Qué naco ese lugar", en: "That place is so tacky" },
+      { es: "No seas naco, vístete bien", en: "Don't be tacky, dress well" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 17,
-    spanish: "¡Qué madre!",
+    category: "street",
+    spanish: "¡Qué desmadre!",
     english: "What a mess! / Oh my god!",
     context: "Expressing frustration or surprise",
+    examples: [
+      { es: "¡Qué desmadre! Mira cómo quedó todo", en: "What a mess! Look how everything turned out" },
+      { es: "Esa fiesta fue un desmadre total", en: "That party was a total mess" },
+      { es: "¡Qué desmadre con el tráfico!", en: "What a mess with the traffic!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 18,
+    category: "street",
     spanish: "Está padrísimo",
     english: "That's awesome!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está padrísimo tu nuevo coche!", en: "Your new car is awesome!" },
+      { es: "La película estuvo padrísima", en: "The movie was awesome" },
+      { es: "Qué padrísimo está este lugar", en: "This place is so awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 19,
+    category: "street",
     spanish: "Me vale madre",
     english: "I don't care",
     context: "Strong expression of indifference",
+    examples: [
+      { es: "Me vale madre lo que digan", en: "I don't care what they say" },
+      { es: "Eso me vale madre completamente", en: "I don't care about that at all" },
+      { es: "Me vale madre si viene o no", en: "I don't care if he comes or not" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 20,
+    category: "street",
     spanish: "¡Qué show!",
     english: "What a scene! / drama",
     context: "Commenting on a situation",
+    examples: [
+      { es: "¡Qué show armaron en la fiesta!", en: "What a scene they made at the party!" },
+      { es: "Siempre hace un show por todo", en: "He always makes a scene about everything" },
+      { es: "¡Qué show! Mira cómo están discutiendo", en: "What a scene! Look how they're arguing" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 21,
+    category: "street",
     spanish: "Pásele",
     english: "Come in / go ahead",
     context: "Inviting someone to enter or proceed",
+    examples: [
+      { es: "Pásele, está abierto", en: "Come in, it's open" },
+      { es: "Pásele, por favor, siéntese", en: "Come in, please, have a seat" },
+      { es: "Pásele, no se quede en la puerta", en: "Come in, don't stay at the door" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 22,
+    category: "street",
     spanish: "Simón",
     english: "Yes / yeah",
     context: "Casual way to say yes",
+    examples: [
+      { es: "¿Vas a la fiesta? Simón, claro que sí", en: "Are you going to the party? Yeah, of course" },
+      { es: "Simón, está bien", en: "Yeah, that's fine" },
+      { es: "¿Te parece bien? Simón", en: "Does that seem okay? Yeah" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 23,
+    category: "street",
     spanish: "¡No seas mamón!",
     english: "Don't be a jerk!",
     context: "Telling someone not to be annoying",
+    examples: [
+      { es: "¡No seas mamón y ayúdame!", en: "Don't be a jerk and help me!" },
+      { es: "No seas mamón, comparte un poco", en: "Don't be a jerk, share a little" },
+      { es: "¡No seas mamón! No hagas eso", en: "Don't be a jerk! Don't do that" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 24,
+    category: "street",
     spanish: "Está chido",
     english: "That's cool",
     context: "Approving something",
+    examples: [
+      { es: "Tu nueva música está bien chida", en: "Your new music is really cool" },
+      { es: "¡Está chido que vengas!", en: "It's cool that you're coming!" },
+      { es: "Ese lugar está súper chido", en: "That place is super cool" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 25,
+    category: "street",
     spanish: "¡Qué pedo!",
     english: "What's up! / What happened?",
     context: "Very casual greeting or question",
+    examples: [
+      { es: "¡Qué pedo! ¿Cómo estás?", en: "What's up! How are you?" },
+      { es: "¡Qué pedo pasó aquí?", en: "What happened here?" },
+      { es: "Oye, ¿qué pedo con tu trabajo?", en: "Hey, what's up with your job?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 26,
+    category: "street",
     spanish: "¡Está de pelos!",
     english: "That's excellent! / awesome!",
     context: "Saying something is really good",
+    examples: [
+      { es: "¡Está de pelos esta comida!", en: "This food is excellent!" },
+      { es: "Tu coche está de pelos", en: "Your car is awesome" },
+      { es: "¡Qué de pelos está el concierto!", en: "The concert is so excellent!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 27,
+    category: "street",
     spanish: "¡Órale, está chingón!",
     english: "Wow, that's awesome!",
     context: "Combining exclamations for emphasis",
+    examples: [
+      { es: "¡Órale, está chingón tu nuevo trabajo!", en: "Wow, your new job is awesome!" },
+      { es: "Órale, qué chingón está esto", en: "Wow, this is so awesome" },
+      { es: "¡Órale! Está súper chingón", en: "Wow! It's super awesome" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 28,
+    category: "street",
     spanish: "No me digas",
     english: "No way / you don't say",
     context: "Expressing surprise or disbelief",
+    examples: [
+      { es: "¿Ganaste la lotería? ¡No me digas!", en: "You won the lottery? No way!" },
+      { es: "No me digas que es verdad", en: "You don't say it's true" },
+      { es: "¡No me digas! ¿En serio se casó?", en: "No way! Did he really get married?" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
   },
   {
     id: 29,
+    category: "street",
     spanish: "Está a toda madre",
     english: "That's really great!",
     context: "Very positive expression",
+    examples: [
+      { es: "¡Está a toda madre tu fiesta!", en: "Your party is really great!" },
+      { es: "Este lugar está a toda madre", en: "This place is really great" },
+      { es: "¡Qué a toda madre está el concierto!", en: "The concert is so great!" }
+    ],
     difficulty: 0,
     lastSeen: null,
     interval: 1
