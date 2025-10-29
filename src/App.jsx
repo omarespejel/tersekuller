@@ -28,14 +28,17 @@ function App() {
     if (correct) {
       setStreak(prev => prev + 1);
       setShowReward(true);
-      setTimeout(() => setShowReward(false), 2000);
+      // Longer display time for mobile
+      setTimeout(() => setShowReward(false), 2500); // was 2000
     } else {
       setStreak(0);
+      setShowReward(false); // Ensure it's hidden on wrong answer
     }
     
+    // Wait longer before showing next card
     setTimeout(() => {
       setCurrentCard(getNextCard());
-    }, 2000);
+    }, correct ? 2600 : 1500); // Longer wait if correct to see celebration
   };
 
   const progress = cards.filter(c => c.difficulty > 0).length;

@@ -82,88 +82,87 @@ then provide specific, actionable advice for improvement. Focus on:
 │   │   ├── useSound.js
 │   │   └── useSpacedRepetition.js
 │   └── main.jsx
-├── tersekuller-context-2025-10-29_19-15-49_CET.txt
+├── tersekuller-context-2025-10-29_20-28-52_CET.txt
 ├── uv.lock
 └── vite.config.js
 
 8 directories, 37 files
 
 ## FILE: README.md
-# 🐻 TERSEKULLER 🍯
+# TERSEKULLER
 
-A cute flashcard app for learning Mexican Spanish phrases, built with React and Vite.
+A flashcard app that teaches Mexican Spanish using spaced repetition. Built for Buse, who needs practical phrases for travel. The app remembers what you know and shows you what you don't.
 
-## Features
+## What It Does
 
-- 📚 30+ Mexican Spanish phrases
-- 🧠 Spaced repetition algorithm for effective learning
-- 🎨 Beautiful Berachain-inspired design (honey & bear colors)
-- ✨ Cute animations and confetti rewards
-- 💾 Local storage for progress tracking
-- 📱 Responsive design
+You see a Spanish phrase. Flip the card to see the English translation. Tell the app if you got it right or wrong. Cards you know well appear less often. Cards you struggle with come back sooner. Your progress saves automatically in your browser.
 
-## Quick Setup
+The app includes 125 flashcards covering street Spanish, essential phrases, food vocabulary, emergency situations, and vegetarian-specific phrases. Each card includes context and examples showing how the phrase is used in real conversations.
+
+## How It Works
+
+The spaced repetition algorithm follows SM-2 principles, inspired by programs like Anki. When you answer correctly, the card waits longer before showing again. When you answer incorrectly, it returns within a day. Cards overdue for review appear first.
+
+Visual feedback tells you immediately if you got the answer right—a green flash for correct, a red shake for wrong. Celebrations happen when you build streaks. Dobby images appear with Mexican encouragement phrases like "¡Órale, qué chingón!" when you get answers right.
+
+## Setup
+
+Install dependencies with Bun:
 
 ```bash
-# Install dependencies
 bun install
+```
 
-# Start development server
-bun run dev
-# or simply: bun dev
+Start the development server:
 
-# Build for production
-bun run build
-# or simply: bun build
+```bash
+bun dev
+```
 
-# Preview production build
-bun run preview
-# or simply: bun preview
+Build for production:
+
+```bash
+bun build
+```
+
+Preview the production build:
+
+```bash
+bun preview
 ```
 
 ## Project Structure
 
-```
-tersekuller/
-├── src/
-│   ├── components/
-│   │   ├── FlashCard.jsx      # Main flashcard component with flip animation
-│   │   ├── StickerReward.jsx  # Celebration rewards with confetti
-│   │   └── ProgressBar.jsx    # Progress indicator
-│   ├── data/
-│   │   └── flashcards.js      # Static Mexican Spanish phrases
-│   ├── hooks/
-│   │   └── useSpacedRepetition.js  # Spaced repetition algorithm
-│   ├── App.jsx                # Main app component
-│   ├── App.css                # Styling with Berachain colors
-│   └── main.jsx               # Entry point
-├── package.json
-├── vite.config.js
-└── render.yaml                 # Render.com deployment config
-```
+The app is organized simply. Components live in `src/components/`. Data lives in `src/data/`. Hooks for business logic live in `src/hooks/`.
 
-## How It Works
+- `FlashCard.jsx` - The main card component with flip animation
+- `useSpacedRepetition.js` - Handles the spaced repetition algorithm and localStorage persistence
+- `flashcards.js` - Contains all 125 phrases with Spanish, English, context, and examples
+- `App.jsx` - Orchestrates components and handles answer submissions
 
-1. **Flashcards**: See a Spanish phrase, flip to see the English translation
-2. **Spaced Repetition**: Cards you know appear less frequently, cards you struggle with appear more often
-3. **Progress Tracking**: Your progress is saved locally in your browser
-4. **Rewards**: Get cute stickers and confetti when you get answers right!
+Other components track progress: `Stats`, `DailyGoal`, `Achievements`, `ReviewSchedule`, and `ProgressSummary`. Each serves a specific purpose—showing your streak, displaying cards mastered, highlighting achievements unlocked, or visualizing your review schedule.
 
-## Spaced Repetition Algorithm
+## Technical Details
 
-The app uses a simple but effective spaced repetition algorithm:
-- Correct answers: Double the interval (max 30 days)
-- Wrong answers: Reset to 1 day
-- Priority given to cards that are due for review
+The app uses React with Vite for fast development and small bundles. It relies on `framer-motion` for animations, `canvas-confetti` for celebrations, and `react-swipeable` for mobile gestures. Everything runs in the browser—no backend required. Progress saves to localStorage automatically.
+
+The design uses a Berachain-inspired color palette: honey gold, bear brown, and pink accents. Cards use glassmorphism effects with backdrop blur. The interface responds to mobile and desktop screens. Touch targets meet accessibility standards—buttons are at least 44 pixels tall on mobile.
 
 ## Deployment
 
-The app is configured for deployment on Render.com. Simply push to GitHub and connect your repository to Render.
+The app deploys as a static site. Render.com configuration exists in `render.yaml`. Push to GitHub and connect the repository to Render. The build process runs `bun build`, which outputs static files to `dist/`. Render serves these files.
 
-## Made with ❤️
+## Keyboard Shortcuts
 
-Created by Omar Espejel for Buse
+Press Spacebar to flip a card. Press 1 for "Need practice" or 2 for "Got it!" after flipping. On mobile, swipe up to flip, swipe left for wrong, swipe right for correct.
 
+## About the Name
+
+TERSEKULLER combines "Türk" (Turkish) and "skull" (as in studying hard), made cute with bear and honey emojis. It's built specifically for Buse, who is Turkish and learning Spanish for travel.
+
+---
+
+Made for Buse by Omar Espejel
 
 ---
 
@@ -214,7 +213,8 @@ export default defineConfig({
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/jpeg" href="/images/dobby1.jpeg" />
+    <link rel="apple-touch-icon" href="/images/dobby1.jpeg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🐻 TERSEKULLER 🍯</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -275,15 +275,22 @@ venv.bak/
 ## FILE: render.yaml
 services:
   - type: web
-    name: tersekuller
+    name: tersekuller-buse
     env: static
     buildCommand: bun install && bun run build
     staticPublishPath: ./dist
+    domains:
+      - buse.espejel.cc
     headers:
       - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /static/*
         name: Cache-Control
-        value: public, max-age=3600
-
+        value: public, max-age=31536000
 
 ---
 
@@ -630,7 +637,7 @@ body::before {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px 20px;
   max-width: 600px;
   margin: 0 auto;
 }
@@ -980,8 +987,9 @@ main {
   perspective: 1000px;
   width: 100%;
   max-width: 450px;
-  margin-bottom: 20px;
+  margin: 20px auto;
   height: 550px;
+  padding: 0 10px;
 }
 
 .card {
@@ -1009,12 +1017,39 @@ main {
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-glass);
   border-radius: 20px;
-  padding: 40px;
+  padding: 30px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   overflow-y: auto;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Visual feedback for answers */
+.card.answer-correct .card-back {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), var(--glass-bg));
+  box-shadow: 0 0 30px rgba(76, 175, 80, 0.4), var(--shadow-glass);
+  animation: correctPulse 0.6s ease-out;
+}
+
+.card.answer-wrong .card-back {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), var(--glass-bg));
+  box-shadow: 0 0 30px rgba(244, 67, 54, 0.4), var(--shadow-glass);
+  animation: wrongPulse 0.6s ease-out;
+}
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wrongPulse {
+  0% { transform: scale(1); }
+  25% { transform: translateX(-5px) scale(0.98); }
+  75% { transform: translateX(5px) scale(0.98); }
+  100% { transform: translateX(0) scale(1); }
 }
 
 .card-front {
@@ -1076,52 +1111,70 @@ main {
 .examples-section {
   width: 100%;
   margin: 20px 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .examples-toggle {
-  background: var(--glass-bg);
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.3), rgba(255, 193, 7, 0.3));
   backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  padding: 10px 20px;
+  border: 2px solid var(--honey-gold);
+  padding: 12px 25px;
   border-radius: 25px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--bear-dark);
   transition: all 0.3s ease;
   width: 100%;
   margin-bottom: 15px;
+  font-size: 1rem;
 }
 
 .examples-toggle:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.5), rgba(255, 193, 7, 0.5));
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
 
 .examples-list {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: visible;
+  min-height: 0;
 }
 
 .example-item {
-  background: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 248, 220, 0.4));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 15px;
-  padding: 15px;
-  margin-bottom: 10px;
+  padding: 18px;
+  transition: all 0.3s ease;
+}
+
+.example-item:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 248, 220, 0.6));
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
 }
 
 .example-spanish {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--bear-dark);
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-style: italic;
+  line-height: 1.4;
 }
 
 .example-english {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--bear-brown);
-  opacity: 0.9;
+  opacity: 0.95;
+  line-height: 1.4;
+  padding-left: 15px;
+  border-left: 3px solid var(--honey-gold);
 }
 
 .flip-btn,
@@ -1429,30 +1482,31 @@ footer {
 }
 
 .made-with-love {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--bear-dark);
+  opacity: 0.75;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  animation: heartbeat 1.5s ease-in-out infinite;
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+  gap: 6px;
+  margin-top: 15px;
+  animation: heartbeat 2s ease-in-out infinite;
 }
 
 @keyframes heartbeat {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.03); }
 }
 
 .heart-icon {
   display: inline-block;
   color: #ff1744;
-  font-size: 2rem;
-  animation: pulse-heart 1s ease-in-out infinite;
-  filter: drop-shadow(0 0 15px rgba(255, 23, 68, 0.6));
+  font-size: 1.1rem;
+  animation: pulse-heart 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 23, 68, 0.4));
+  opacity: 0.85;
 }
 
 @keyframes pulse-heart {
@@ -1464,16 +1518,15 @@ footer {
 }
 
 .creator-names {
-  font-size: 1.5rem;
+  font-size: 0.95rem;
   background: linear-gradient(90deg, #ff1744, #ff6b6b, #ffd700, #4ecdc4, #764ba2);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 2s ease infinite;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  animation: gradient-shift 3s ease infinite;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
 @keyframes gradient-shift {
@@ -1575,6 +1628,70 @@ footer {
 
 /* Mobile responsive styles for new components */
 @media (max-width: 600px) {
+  .app {
+    padding: 10px 15px;
+  }
+  
+  .card-container {
+    max-width: 100%;
+    height: 500px;
+    margin: 15px auto;
+    padding: 0 5px;
+  }
+  
+  .card-front,
+  .card-back {
+    padding: 25px 20px;
+    border-radius: 18px;
+  }
+  
+  .spanish-text {
+    font-size: 2rem !important;
+    margin: 30px 0 !important;
+  }
+  
+  .english-text {
+    font-size: 1.5rem !important;
+  }
+  
+  .context-text {
+    font-size: 0.95rem !important;
+  }
+  
+  .examples-section {
+    margin: 15px 0;
+  }
+  
+  .example-item {
+    padding: 12px;
+  }
+  
+  .example-spanish {
+    font-size: 1rem !important;
+  }
+  
+  .example-english {
+    font-size: 0.9rem !important;
+  }
+  
+  .answer-buttons {
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .btn-answer {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    min-height: 44px; /* Better touch target */
+  }
+  
+  .flip-btn,
+  .glass-btn {
+    padding: 12px 25px;
+    font-size: 0.9rem;
+    min-height: 44px; /* Better touch target */
+  }
+  
   .dobby-image {
     width: 150px;
     height: 150px;
@@ -1596,6 +1713,19 @@ footer {
 
   .daily-goal {
     padding: 12px;
+  }
+  
+  header {
+    padding: 20px 15px;
+  }
+  
+  .stats {
+    gap: 10px;
+  }
+  
+  .stat-item {
+    padding: 8px 12px;
+    min-width: 70px;
   }
 }
 
@@ -1778,7 +1908,7 @@ function App() {
     <div className="app">
       <header>
         <h1>🐻 TERSEKULLER 🍯</h1>
-        <p className="subtitle">Preparing Buse for Mexican Spanish</p>
+        <p className="subtitle">Preparing Buse for Spanish</p>
         
         <Stats cards={cards} streak={streak} />
         <DailyGoal cards={cards} />
@@ -2494,7 +2624,8 @@ import { useSwipeable } from 'react-swipeable';
 export function FlashCard({ card, onAnswer }) {
   const [flipped, setFlipped] = useState(false);
   const [answered, setAnswered] = useState(false);
-  const [showExamples, setShowExamples] = useState(false);
+  const [showExamples, setShowExamples] = useState(true); // Show by default!
+  const [answerFeedback, setAnswerFeedback] = useState(null); // 'correct' or 'wrong'
 
   const categoryColors = {
     street: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
@@ -2516,12 +2647,19 @@ export function FlashCard({ card, onAnswer }) {
 
   const handleAnswer = useCallback((correct) => {
     setAnswered(true);
+    setAnswerFeedback(correct ? 'correct' : 'wrong');
     onAnswer(card.id, correct);
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAnswerFeedback(null);
+    }, 800);
     
     setTimeout(() => {
       setFlipped(false);
       setAnswered(false);
-      setShowExamples(false);
+      setShowExamples(true); // Reset to show examples for next card
+      setAnswerFeedback(null);
     }, 1500);
   }, [card.id, onAnswer]);
 
@@ -2551,7 +2689,14 @@ export function FlashCard({ card, onAnswer }) {
   }, [flipped, answered, handleAnswer]);
 
   const category = card.category || 'street';
-  const examples = card.examples || [];
+  
+  // Reset examples visibility when card changes
+  useEffect(() => {
+    setShowExamples(true);
+    setFlipped(false);
+    setAnswered(false);
+    setAnswerFeedback(null);
+  }, [card.id]);
 
   const swipeHandlers = useSwipeable({
     onSwipedUp: () => {
@@ -2580,7 +2725,7 @@ export function FlashCard({ card, onAnswer }) {
       transition={{ type: "spring", stiffness: 300 }}
       {...swipeHandlers}
     >
-      <div className={`card ${flipped ? 'flipped' : ''}`}>
+      <div className={`card ${flipped ? 'flipped' : ''} ${answerFeedback ? `answer-${answerFeedback}` : ''}`}>
         {/* Front of card */}
         <div className="card-front">
           {card.category && (
@@ -2611,32 +2756,32 @@ export function FlashCard({ card, onAnswer }) {
           <p className="context-text">{card.context}</p>
           
           {/* Examples section */}
-          {examples.length > 0 && (
+          {card.examples && Array.isArray(card.examples) && card.examples.length > 0 && (
             <div className="examples-section">
               <button 
                 onClick={() => setShowExamples(!showExamples)}
                 className="examples-toggle"
+                type="button"
               >
-                {showExamples ? '📚 Hide' : '📖 Show'} Examples
+                {showExamples ? '📚 Hide' : '📖 Show'} Examples ({card.examples.length})
               </button>
               
-              <AnimatePresence>
-                {showExamples && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="examples-list"
-                  >
-                    {examples.map((ex, idx) => (
-                      <div key={idx} className="example-item">
-                        <p className="example-spanish">{ex.es}</p>
-                        <p className="example-english">{ex.en}</p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {showExamples && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="examples-list"
+                >
+                  {card.examples.map((ex, idx) => (
+                    <div key={`example-${idx}`} className="example-item">
+                      <p className="example-spanish">{ex.es}</p>
+                      <p className="example-english">{ex.en}</p>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
             </div>
           )}
           
@@ -4133,7 +4278,25 @@ export function useSpacedRepetition() {
   const [cards, setCards] = useState(() => {
     try {
       const saved = localStorage.getItem('tersekuller-cards');
-      return saved ? JSON.parse(saved) : flashcards;
+      if (saved) {
+        const parsedCards = JSON.parse(saved);
+        // Merge saved cards with original flashcards to ensure examples are preserved
+        return parsedCards.map(savedCard => {
+          const originalCard = flashcards.find(fc => fc.id === savedCard.id);
+          if (originalCard) {
+            // Preserve saved progress but use original card data (including examples)
+            return {
+              ...originalCard,
+              difficulty: savedCard.difficulty ?? originalCard.difficulty,
+              lastSeen: savedCard.lastSeen ?? originalCard.lastSeen,
+              interval: savedCard.interval ?? originalCard.interval,
+              nextReview: savedCard.nextReview ?? originalCard.nextReview
+            };
+          }
+          return savedCard;
+        });
+      }
+      return flashcards;
     } catch (error) {
       console.error('Error loading saved cards:', error);
       return flashcards;
@@ -4626,7 +4789,8 @@ import { useSwipeable } from 'react-swipeable';
 export function FlashCard({ card, onAnswer }) {
   const [flipped, setFlipped] = useState(false);
   const [answered, setAnswered] = useState(false);
-  const [showExamples, setShowExamples] = useState(false);
+  const [showExamples, setShowExamples] = useState(true); // Show by default!
+  const [answerFeedback, setAnswerFeedback] = useState(null); // 'correct' or 'wrong'
 
   const categoryColors = {
     street: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
@@ -4648,12 +4812,19 @@ export function FlashCard({ card, onAnswer }) {
 
   const handleAnswer = useCallback((correct) => {
     setAnswered(true);
+    setAnswerFeedback(correct ? 'correct' : 'wrong');
     onAnswer(card.id, correct);
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAnswerFeedback(null);
+    }, 800);
     
     setTimeout(() => {
       setFlipped(false);
       setAnswered(false);
-      setShowExamples(false);
+      setShowExamples(true); // Reset to show examples for next card
+      setAnswerFeedback(null);
     }, 1500);
   }, [card.id, onAnswer]);
 
@@ -4683,7 +4854,14 @@ export function FlashCard({ card, onAnswer }) {
   }, [flipped, answered, handleAnswer]);
 
   const category = card.category || 'street';
-  const examples = card.examples || [];
+  
+  // Reset examples visibility when card changes
+  useEffect(() => {
+    setShowExamples(true);
+    setFlipped(false);
+    setAnswered(false);
+    setAnswerFeedback(null);
+  }, [card.id]);
 
   const swipeHandlers = useSwipeable({
     onSwipedUp: () => {
@@ -4712,7 +4890,7 @@ export function FlashCard({ card, onAnswer }) {
       transition={{ type: "spring", stiffness: 300 }}
       {...swipeHandlers}
     >
-      <div className={`card ${flipped ? 'flipped' : ''}`}>
+      <div className={`card ${flipped ? 'flipped' : ''} ${answerFeedback ? `answer-${answerFeedback}` : ''}`}>
         {/* Front of card */}
         <div className="card-front">
           {card.category && (
@@ -4743,32 +4921,32 @@ export function FlashCard({ card, onAnswer }) {
           <p className="context-text">{card.context}</p>
           
           {/* Examples section */}
-          {examples.length > 0 && (
+          {card.examples && Array.isArray(card.examples) && card.examples.length > 0 && (
             <div className="examples-section">
               <button 
                 onClick={() => setShowExamples(!showExamples)}
                 className="examples-toggle"
+                type="button"
               >
-                {showExamples ? '📚 Hide' : '📖 Show'} Examples
+                {showExamples ? '📚 Hide' : '📖 Show'} Examples ({card.examples.length})
               </button>
               
-              <AnimatePresence>
-                {showExamples && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="examples-list"
-                  >
-                    {examples.map((ex, idx) => (
-                      <div key={idx} className="example-item">
-                        <p className="example-spanish">{ex.es}</p>
-                        <p className="example-english">{ex.en}</p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {showExamples && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="examples-list"
+                >
+                  {card.examples.map((ex, idx) => (
+                    <div key={`example-${idx}`} className="example-item">
+                      <p className="example-spanish">{ex.es}</p>
+                      <p className="example-english">{ex.en}</p>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
             </div>
           )}
           
@@ -5123,7 +5301,25 @@ export function useSpacedRepetition() {
   const [cards, setCards] = useState(() => {
     try {
       const saved = localStorage.getItem('tersekuller-cards');
-      return saved ? JSON.parse(saved) : flashcards;
+      if (saved) {
+        const parsedCards = JSON.parse(saved);
+        // Merge saved cards with original flashcards to ensure examples are preserved
+        return parsedCards.map(savedCard => {
+          const originalCard = flashcards.find(fc => fc.id === savedCard.id);
+          if (originalCard) {
+            // Preserve saved progress but use original card data (including examples)
+            return {
+              ...originalCard,
+              difficulty: savedCard.difficulty ?? originalCard.difficulty,
+              lastSeen: savedCard.lastSeen ?? originalCard.lastSeen,
+              interval: savedCard.interval ?? originalCard.interval,
+              nextReview: savedCard.nextReview ?? originalCard.nextReview
+            };
+          }
+          return savedCard;
+        });
+      }
+      return flashcards;
     } catch (error) {
       console.error('Error loading saved cards:', error);
       return flashcards;
